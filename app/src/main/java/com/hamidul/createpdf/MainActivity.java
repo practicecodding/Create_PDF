@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     final static int REQUEST_CODE_STORAGE_PERMISSION = 1235;
     Button btnCreatePdf;
     Toast toast;
+    String[] informationArray = new String[]{"Name","Company Name","Address","Phone","Email"};
 
 
     @Override
@@ -49,10 +50,90 @@ public class MainActivity extends AppCompatActivity {
                     ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION);
                     setToast("Allow Permission");
                 } else {
-                    convertXMLtoPDF(); // Permission already granted
+                    customPDF(); // Permission already granted
                 }
             }
         });
+
+
+    }
+
+    private void customPDF() {
+
+        PdfDocument pdfDocument = new PdfDocument();
+        Paint paint = new Paint();
+
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(250,400,2).create();
+        PdfDocument.Page page = pdfDocument.startPage(pageInfo);
+        Canvas canvas = page.getCanvas();
+
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTextSize(12.0f);
+        canvas.drawText("HR Enterprises",pageInfo.getPageWidth()/2,30,paint);
+
+        paint.setTextSize(6.0f);
+        paint.setTextScaleX(1.5f);
+        paint.setColor(Color.rgb(122,119,119));
+        canvas.drawText("Street No. 15,  Bharat Nagar,  Haryana", pageInfo.getPageWidth()/2, 40,paint);
+        paint.setTextScaleX(1f);
+
+        paint.setTextAlign(Paint.Align.LEFT);
+        paint.setTextSize(9.0f);
+        paint.setColor(Color.rgb(122,119,119));
+        canvas.drawText("Customer Information",10,70,paint);
+
+        paint.setTextAlign(Paint.Align.LEFT);
+        paint.setTextSize(8.0f);
+        paint.setColor(Color.BLACK);
+
+        int startXPosition = 10;
+        int endXPosition = pageInfo.getPageWidth()-10;
+        int startYPosition = 100;
+
+        for (int i=0; i<informationArray.length; i++){
+            canvas.drawText(informationArray[i],startXPosition,startYPosition,paint);
+            canvas.drawLine(startXPosition,startYPosition+3,endXPosition,startYPosition+3,paint);
+            startYPosition+=20;
+        }
+
+        canvas.drawLine(80,92,80,190,paint);
+
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(2);
+        canvas.drawRect(10,200,pageInfo.getPageWidth()-10,300,paint);
+        canvas.drawLine(85,200,85,300,paint);
+        canvas.drawLine(163,200,163,300,paint);
+        paint.setStrokeWidth(0);
+        paint.setStyle(Paint.Style.FILL);
+
+        canvas.drawText("Photo",35,250,paint);
+        canvas.drawText("Photo",110,250,paint);
+        canvas.drawText("Photo",190,250,paint);
+
+        canvas.drawText("Note:",10,320,paint);
+        canvas.drawLine(35,325,pageInfo.getPageWidth()-10,325,paint);
+        canvas.drawLine(10,345,pageInfo.getPageWidth()-10,345,paint);
+        canvas.drawLine(10,365,pageInfo.getPageWidth()-10,365,paint);
+
+        pdfDocument.finishPage(page);
+
+        File directory = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+        if (directory != null && !directory.exists()) {
+            directory.mkdirs();  // Create directory if it doesn't exist
+        }
+
+        // Define the file path
+        String targetPdf = directory.getPath() + "/custom.pdf";
+        File filePath = new File(targetPdf);
+
+        try {
+            pdfDocument.writeTo(new FileOutputStream(filePath));
+            setToast("Successfully Downloaded");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        pdfDocument.close();
 
 
     }
@@ -179,7 +260,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         pdfDocument.close();
-        setToast("Successfully Downloaded");
 
     }
 
