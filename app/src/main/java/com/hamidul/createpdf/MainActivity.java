@@ -30,7 +30,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
-
     final static int REQUEST_CODE_STORAGE_PERMISSION = 1235;
     Button btnCreatePdf;
     Toast toast;
