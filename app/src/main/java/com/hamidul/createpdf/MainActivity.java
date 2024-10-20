@@ -10,25 +10,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TableRow;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 public class MainActivity extends AppCompatActivity {
     final static int REQUEST_CODE_STORAGE_PERMISSION = 1235;
     Button btnCreatePdf;
@@ -50,7 +44,11 @@ public class MainActivity extends AppCompatActivity {
                     ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION);
                     setToast("Allow Permission");
                 } else {
-                    customPDF(); // Permission already granted
+
+                    // Permission already granted
+
+                    customPDF();
+
                 }
             }
         });
@@ -117,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
         pdfDocument.finishPage(page);
 
-        File directory = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+        File directory = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
         if (directory != null && !directory.exists()) {
             directory.mkdirs();  // Create directory if it doesn't exist
         }
