@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         btnCreatePdf = findViewById(R.id.btnCreatePdf);
         bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.idc_logo);
-        scaledBitmap = Bitmap.createScaledBitmap(bitmap,40,25,false);
+        scaledBitmap = Bitmap.createScaledBitmap(bitmap,30,19,false);
 
         products = new ArrayList<>();
         products.add(new Product("Corn Flakes 250g",150,3));
@@ -84,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
         //Typeface roboto = ResourcesCompat.getFont(this,R.font.roboto);
 
         // Set color for gray underline
-        grayPaint.setColor(Color.GRAY);
-        grayPaint.setStrokeWidth(1);
+        grayPaint.setColor(Color.LTGRAY);
+        grayPaint.setStrokeWidth(0.5f);
 
         PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(842, 595, 1).create();
         PdfDocument.Page page = pdfDocument.startPage(pageInfo);
@@ -93,17 +93,17 @@ public class MainActivity extends AppCompatActivity {
         Canvas canvas = page.getCanvas();
 
         logo.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD_ITALIC));
-        logo.setTextSize(6);
+        logo.setTextSize(5);
         logo.setColor(Color.parseColor("#9A000000"));
 
-        canvas.drawBitmap(scaledBitmap,30,15,paint);
+        canvas.drawBitmap(scaledBitmap,30,10,paint);
 
-        canvas.drawText("International Distribution",72,25,logo);
-        canvas.drawText("Company Bangladesh",71,32.5f,logo);
-        canvas.drawText("PLC.",70,40,logo);
+        canvas.drawText("International Distribution",62,19,logo);
+        canvas.drawText("Company Bangladesh",61,24,logo);
+        canvas.drawText("PLC.",60,29,logo);
 
 
-        invoice.setTextSize(12);
+        invoice.setTextSize(10);
         invoice.setFakeBoldText(true);
         //titlePaint.setTypeface(roboto);
         titlePaint.setTextScaleX(1.1f);
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         //paint.setTypeface(roboto);
         paint.setTextSize(8);
 
-        int y = 50;
+        int y = 40;
 
         // Title of Invoice
         invoice.setTextAlign(Paint.Align.CENTER);
@@ -121,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
         canvas.drawText("Delivery Challan", 210, y, invoice);
 
         y += 18;
-
         paint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText("Cash & Carry-Kellogg",210,y,paint);
         y+=12;
@@ -160,9 +159,9 @@ public class MainActivity extends AppCompatActivity {
         canvas.drawText("Md. Hamidul Sarder",titlePaint.measureText("SO Name : ")+20,y,paint);
 
         y+=40;
-        canvas.drawLine(20, y, 421, y, grayPaint); // Draw gray underline from left to right
+        canvas.drawLine(20, y-4, 421, y-4, grayPaint); // Draw gray underline from left to right
 
-        y +=10;
+        y +=8;
         // Table headers
         canvas.drawText("UNIT", 120, y, titlePaint);
         canvas.drawText("ORDER", 180, y, titlePaint);
@@ -172,15 +171,15 @@ public class MainActivity extends AppCompatActivity {
         canvas.drawText("QTY", 180, y, titlePaint);
         canvas.drawText("Total", 240, y, titlePaint);
 
-        y +=10;
+        y +=8;
 
-        canvas.drawLine(20, y, 421, y, grayPaint); // Draw gray underline from left to right
+        canvas.drawLine(20, y-2, 421, y-2, grayPaint); // Draw gray underline from left to right
 
-        y += 10;
+        y += 8;
 
         int leftMargin = 20;
         int productNameWidth = 100; // Maximum width for product name before wrapping
-        int lineHeight = 10;
+        int lineHeight = 8;
 
         // Print each product line
         for (Product product : products) {
@@ -190,9 +189,9 @@ public class MainActivity extends AppCompatActivity {
             double totalPrice = productPrice * productQuantity;
 
             // Draw price, quantity, and total price aligned to their respective positions
-            canvas.drawText(String.valueOf(productPrice), 120, y, paint);
-            canvas.drawText(String.valueOf(productQuantity), 180, y, paint);
-            canvas.drawText(String.valueOf(totalPrice), 240, y, paint);
+            canvas.drawText(String.valueOf(productPrice), 120, y+2, paint);
+            canvas.drawText(String.valueOf(productQuantity), 180, y+2, paint);
+            canvas.drawText(String.valueOf(totalPrice), 240, y+2, paint);
 
             // Measure product name and split if necessary
             float textWidth = paint.measureText(productName);
@@ -203,17 +202,17 @@ public class MainActivity extends AppCompatActivity {
                 for (String word : words) {
                     if (paint.measureText(line + word) > productNameWidth) {
                         // Draw the current line if it exceeds the width
-                        canvas.drawText(line.toString(), leftMargin, y, paint);
+                        canvas.drawText(line.toString(), leftMargin, y+2, paint);
                         y += lineHeight;
                         line = new StringBuilder(); // Reset for the next line
                     }
                     line.append(word).append(" ");
                 }
                 // Draw remaining text in the last line
-                canvas.drawText(line.toString(), leftMargin, y, paint);
+                canvas.drawText(line.toString(), leftMargin, y+2, paint);
             } else {
                 // Draw product name in one line if it fits
-                canvas.drawText(productName, leftMargin, y, paint);
+                canvas.drawText(productName, leftMargin, y+2, paint);
             }
 
             // Draw gray underline below each product row
@@ -542,6 +541,9 @@ public class MainActivity extends AppCompatActivity {
         toast = Toast.makeText(MainActivity.this,text,Toast.LENGTH_SHORT);
         toast.show();
     }
+
+
+
 
 
 }
