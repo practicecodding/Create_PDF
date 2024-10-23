@@ -2,18 +2,18 @@ package com.hamidul.createpdf;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.pdf.PdfDocument;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
+
 import android.view.View;
 import android.widget.Button;
-import android.widget.TableRow;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,19 +23,34 @@ import androidx.core.content.ContextCompat;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     final static int REQUEST_CODE_STORAGE_PERMISSION = 1235;
     Button btnCreatePdf;
     Toast toast;
+    int pageWidth = 1200;
     String[] informationArray = new String[]{"Name","Company Name","Address","Phone","Email"};
+    Product product;
+    ArrayList<Product> products;
+    Bitmap bitmap, scaledBitmap;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         btnCreatePdf = findViewById(R.id.btnCreatePdf);
+        bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.idc_logo);
+        scaledBitmap = Bitmap.createScaledBitmap(bitmap,40,25,false);
+
+        products = new ArrayList<>();
+        products.add(new Product("Corn Flakes 250g",150,3));
+        products.add(new Product("Corn Flakes 250g pp",250,3));
+        products.add(new Product("Real Almond Corn Flakes 345g",550,2));
+        products.add(new Product("Chocos 250g",999,2));
+        products.add(new Product("Pringles Sour Cream Onion 134g",350,6));
+        products.add(new Product("Pringles Cheesy Cheese 134g",350,6));
 
         btnCreatePdf.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
                     // Permission already granted
 
-                    customPDF();
+                    generateInvoice();
 
                 }
             }
@@ -56,7 +71,296 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void customPDF() {
+
+    private void generateInvoice() {
+        PdfDocument pdfDocument = new PdfDocument();
+        Paint paint = new Paint();
+        Paint logo = new Paint();
+        Paint invoice = new Paint();
+        Paint titlePaint = new Paint();
+        Paint grayPaint = new Paint();
+
+        // Load Times New Roman font from assets
+        //Typeface roboto = ResourcesCompat.getFont(this,R.font.roboto);
+
+        // Set color for gray underline
+        grayPaint.setColor(Color.GRAY);
+        grayPaint.setStrokeWidth(1);
+
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(842, 595, 1).create();
+        PdfDocument.Page page = pdfDocument.startPage(pageInfo);
+
+        Canvas canvas = page.getCanvas();
+
+        logo.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD_ITALIC));
+        logo.setTextSize(6);
+        logo.setColor(Color.parseColor("#9A000000"));
+
+        canvas.drawBitmap(scaledBitmap,30,15,paint);
+
+        canvas.drawText("International Distribution",72,25,logo);
+        canvas.drawText("Company Bangladesh",71,32.5f,logo);
+        canvas.drawText("PLC.",70,40,logo);
+
+
+        invoice.setTextSize(12);
+        invoice.setFakeBoldText(true);
+        //titlePaint.setTypeface(roboto);
+        titlePaint.setTextScaleX(1.1f);
+        titlePaint.setTextSize(8);
+        titlePaint.setFakeBoldText(true);
+        paint.setTextScaleX(1.1f);
+        //paint.setTypeface(roboto);
+        paint.setTextSize(8);
+
+        int y = 50;
+
+        // Title of Invoice
+        invoice.setTextAlign(Paint.Align.CENTER);
+        invoice.setTextScaleX(1.1f);
+        canvas.drawText("Delivery Challan", 210, y, invoice);
+
+        y += 18;
+
+        paint.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText("Cash & Carry-Kellogg",210,y,paint);
+        y+=12;
+        canvas.drawText("16/1 Lake Circus, Kalabagan Kalabagan Dhaka",210,y,paint);
+        y+=12;
+        canvas.drawText("Cell Number : 01964400647",210,y,paint);
+
+        y += 30;
+        titlePaint.setTextAlign(Paint.Align.LEFT);
+        canvas.drawText("Outlet Name : ",20,y,titlePaint);
+        canvas.drawText("Business Name : ",295,y,titlePaint);
+        paint.setTextAlign(Paint.Align.LEFT);
+        canvas.drawText("Popular Pharmacy",titlePaint.measureText("Outlet Name : ")+20,y,paint);
+        canvas.drawText("Kellogg's",titlePaint.measureText("Business Name : ")+295,y,paint);
+
+        y+=12;
+        canvas.drawText("Address : ",20,y,titlePaint);
+        canvas.drawText("Order Number : ",295,y,titlePaint);
+        canvas.drawText("Dhanmondi Road 2",titlePaint.measureText("Address : ")+20,y,paint);
+        canvas.drawText("SO9293653",titlePaint.measureText("Order Number : ")+295,y,paint);
+
+        y+=12;
+        canvas.drawText("Outlet Code : ",20,y,titlePaint);
+        canvas.drawText("Order Date : ",295,y,titlePaint);
+        canvas.drawText("1202050210019",titlePaint.measureText("Outlet Code : ")+20,y,paint);
+        canvas.drawText("2024-10-20",titlePaint.measureText("Order Date : ")+295,y,paint);
+
+        y+=12;
+        canvas.drawText("Route Name : ",20,y,titlePaint);
+        canvas.drawText("Delivery Date : ",295,y,titlePaint);
+        canvas.drawText("Mirpur Road",titlePaint.measureText("Route Name : ")+20,y,paint);
+        canvas.drawText(" ",titlePaint.measureText("Delivery Date : ")+295,y,paint);
+
+        y+=12;
+        canvas.drawText("SO Name : ",20,y,titlePaint);
+        canvas.drawText("Md. Hamidul Sarder",titlePaint.measureText("SO Name : ")+20,y,paint);
+
+        y+=40;
+        canvas.drawLine(20, y, 421, y, grayPaint); // Draw gray underline from left to right
+
+        y +=10;
+        // Table headers
+        canvas.drawText("UNIT", 120, y, titlePaint);
+        canvas.drawText("ORDER", 180, y, titlePaint);
+        y += 10;
+        canvas.drawText("SKU NAME", 20, y, titlePaint);
+        canvas.drawText("PRICE", 120, y, titlePaint);
+        canvas.drawText("QTY", 180, y, titlePaint);
+        canvas.drawText("Total", 240, y, titlePaint);
+
+        y +=10;
+
+        canvas.drawLine(20, y, 421, y, grayPaint); // Draw gray underline from left to right
+
+        y += 10;
+
+        int leftMargin = 20;
+        int productNameWidth = 100; // Maximum width for product name before wrapping
+        int lineHeight = 10;
+
+        // Print each product line
+        for (Product product : products) {
+            String productName = product.getName();
+            double productPrice = product.getPrice();
+            int productQuantity = product.getQuantity();
+            double totalPrice = productPrice * productQuantity;
+
+            // Draw price, quantity, and total price aligned to their respective positions
+            canvas.drawText(String.valueOf(productPrice), 120, y, paint);
+            canvas.drawText(String.valueOf(productQuantity), 180, y, paint);
+            canvas.drawText(String.valueOf(totalPrice), 240, y, paint);
+
+            // Measure product name and split if necessary
+            float textWidth = paint.measureText(productName);
+            if (textWidth > productNameWidth) {
+                // Split product name into multiple lines
+                String[] words = productName.split(" ");
+                StringBuilder line = new StringBuilder();
+                for (String word : words) {
+                    if (paint.measureText(line + word) > productNameWidth) {
+                        // Draw the current line if it exceeds the width
+                        canvas.drawText(line.toString(), leftMargin, y, paint);
+                        y += lineHeight;
+                        line = new StringBuilder(); // Reset for the next line
+                    }
+                    line.append(word).append(" ");
+                }
+                // Draw remaining text in the last line
+                canvas.drawText(line.toString(), leftMargin, y, paint);
+            } else {
+                // Draw product name in one line if it fits
+                canvas.drawText(productName, leftMargin, y, paint);
+            }
+
+            // Draw gray underline below each product row
+            y += lineHeight;
+            canvas.drawLine(20, y, 421, y, grayPaint); // Draw gray underline from left to right
+
+            y += lineHeight; // Move to the next row
+        }
+//
+        pdfDocument.finishPage(page);
+//
+        // Save PDF to storage
+        File file = new File(getExternalFilesDir(null), "invoice.pdf");
+        try {
+            pdfDocument.writeTo(new FileOutputStream(file));
+            Toast.makeText(this, "Invoice saved as PDF", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error generating PDF", Toast.LENGTH_SHORT).show();
+        }
+
+        pdfDocument.close();
+    }
+
+
+    public class Product {
+        private String name;
+        private double price;
+        private int quantity;
+
+        public Product(String name, double price, int quantity) {
+            this.name = name;
+            this.price = price;
+            this.quantity = quantity;
+        }
+
+        public String getName() { return name; }
+        public double getPrice() { return price; }
+        public int getQuantity() { return quantity; }
+    }
+
+    private void getInvoice() {
+        PdfDocument pdfDocument = new PdfDocument();
+        Paint paint = new Paint();
+        Paint titlePaint = new Paint();
+        Paint grayPaint = new Paint();
+
+        // Set color for gray borders and underline
+        grayPaint.setColor(Color.GRAY);
+        grayPaint.setStrokeWidth(0.5f);
+        grayPaint.setStyle(Paint.Style.STROKE); // Only draw the border (outline)
+
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(300, 600, 1).create();
+        PdfDocument.Page page = pdfDocument.startPage(pageInfo);
+
+        Canvas canvas = page.getCanvas();
+        titlePaint.setTextSize(15);
+        titlePaint.setFakeBoldText(true);
+
+        int y = 25;
+
+        // Title of Invoice
+        canvas.drawText("Invoice", 120, y, titlePaint);
+
+        y += 20;
+
+        // Table headers
+        paint.setTextSize(12);
+        int leftMargin = 10;
+        int headerHeight = 20; // Height for the header row
+
+        // Draw headers
+        canvas.drawText("Product", leftMargin, y, paint);
+        canvas.drawText("Price", 120, y, paint);
+        canvas.drawText("Qty", 180, y, paint);
+        canvas.drawText("Total", 240, y, paint);
+
+        y+=20;
+
+        // Draw gray border around the title row (header)
+        int top = y - headerHeight; // Top border just above the text
+        int bottom = y + 10; // Bottom border slightly below the text
+        canvas.drawRect(10, top, 290, bottom, grayPaint); // Rectangle for the header row
+
+        y += 20;
+
+        // Print each product line
+        int productNameWidth = 100; // Maximum width for product name before wrapping
+        int lineHeight = 20;
+
+        for (Product product : products) {
+            String productName = product.getName();
+            double productPrice = product.getPrice();
+            int productQuantity = product.getQuantity();
+            double totalPrice = productPrice * productQuantity;
+
+            // Measure product name and split if necessary
+            float textWidth = paint.measureText(productName);
+            if (textWidth > productNameWidth) {
+                // Split product name into multiple lines
+                String[] words = productName.split(" ");
+                StringBuilder line = new StringBuilder();
+                for (String word : words) {
+                    if (paint.measureText(line + word) > productNameWidth) {
+                        // Draw the current line if it exceeds the width
+                        canvas.drawText(line.toString(), leftMargin, y, paint);
+                        y += lineHeight;
+                        line = new StringBuilder(); // Reset for the next line
+                    }
+                    line.append(word).append(" ");
+                }
+                // Draw remaining text in the last line
+                canvas.drawText(line.toString(), leftMargin, y, paint);
+            } else {
+                // Draw product name in one line if it fits
+                canvas.drawText(productName, leftMargin, y, paint);
+            }
+
+            // Draw price, quantity, and total price aligned to their respective positions
+            canvas.drawText(String.valueOf(productPrice), 120, y, paint);
+            canvas.drawText(String.valueOf(productQuantity), 180, y, paint);
+            canvas.drawText(String.valueOf(totalPrice), 240, y, paint);
+
+            // Draw gray underline below each product row
+            y += lineHeight;
+            canvas.drawLine(10, y, 290, y, grayPaint); // Draw gray underline from left to right
+
+            y += lineHeight; // Move to the next row
+        }
+
+        pdfDocument.finishPage(page);
+
+        // Save PDF to storage
+        File file = new File(getExternalFilesDir(null), "invoice.pdf");
+        try {
+            pdfDocument.writeTo(new FileOutputStream(file));
+            Toast.makeText(this, "Invoice saved as PDF", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error generating PDF", Toast.LENGTH_SHORT).show();
+        }
+
+        pdfDocument.close();
+    }
+
+
+    /*private void customPDF() {
 
         PdfDocument pdfDocument = new PdfDocument();
         Paint paint = new Paint();
@@ -229,37 +533,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Close the document
         pdfDocument.close();
-    }
+    }*/
 
-    private void createPdf(){
-        PdfDocument pdfDocument = new PdfDocument();
-        Paint paint = new Paint();
 
-        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(250,400,2).create();
-        PdfDocument.Page page = pdfDocument.startPage(pageInfo);
-        Canvas canvas = page.getCanvas();
-        canvas.drawText("Hello World !!",40,50,paint);
-        pdfDocument.finishPage(page);
-
-        File directory = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
-        if (directory != null && !directory.exists()) {
-            directory.mkdirs();  // Create directory if it doesn't exist
-        }
-
-        // Define the file path
-        String targetPdf = directory.getPath() + "/first.pdf";
-        File filePath = new File(targetPdf);
-
-        try {
-            pdfDocument.writeTo(new FileOutputStream(filePath));
-            setToast("Successfully Downloaded");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        pdfDocument.close();
-
-    }
 
     private void setToast(String text){
         if (toast!=null) toast.cancel();

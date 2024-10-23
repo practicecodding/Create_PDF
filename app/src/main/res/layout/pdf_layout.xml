@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:text="This is Test Version"
         android:textStyle="bold"
-        android:textColor="@color/black"
+        android:textColor="#9A000000"
         android:textSize="22sp"
         android:layout_gravity="center"
         android:gravity="center"
