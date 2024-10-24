@@ -592,8 +592,6 @@ public class MainActivity extends AppCompatActivity {
         pdfDocument.close();
     }*/
 
-
-
     private void setToast(String text){
         if (toast!=null) toast.cancel();
         toast = Toast.makeText(MainActivity.this,text,Toast.LENGTH_SHORT);
