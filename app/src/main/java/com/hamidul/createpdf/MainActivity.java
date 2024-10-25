@@ -47,11 +47,15 @@ public class MainActivity extends AppCompatActivity {
 
         products = new ArrayList<>();
         products.add(new Product("CF34-1","Corn Flakes 250g",315,3,0));
-        products.add(new Product("CF41-2","Corn Flakes 250g pp",220,3,10));
+        products.add(new Product("CF41-2","Corn Flakes 250g pp",220,3,30));
         products.add(new Product("AC34","Real Almond Corn Flakes 345g",480,2,0));
-        products.add(new Product("CH24-2","Chocos 250g",305,2,20));
-        products.add(new Product("86467123","Pringles Sour Cream Onion 134g",312.53,5,13));
-        products.add(new Product("86467123","Pringles Cheesy Cheese 134g",313.78,6,13));
+        products.add(new Product("CH24-2","Chocos 250g",305,2,0));
+        products.add(new Product("CH34-2","Chocos 385g",400,3,45));
+        products.add(new Product("CH01","Chocos 22g",17.50,15,17.50));
+        products.add(new Product("86467123","Pringles Sour Cream Onion 134g",312,12,96));
+        products.add(new Product("86467123","Pringles Cheesy Cheese 134g",313,12,96));
+        products.add(new Product("86467123","Pringles Original 42g",135,12,60));
+        products.add(new Product("86467123","Pringles Sour Cream Onion 42g",135,12,60));
 
         btnCreatePdf.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
 
                     // Permission already granted
-                    generateInvoice();
+                    generateInvoice("Moyuri Confectionery");
 
                 }
             }
@@ -72,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void generateInvoice() {
+    private void generateInvoice(String outletName) {
         PdfDocument pdfDocument = new PdfDocument();
         Paint paint = new Paint();
         Paint logo = new Paint();
@@ -97,10 +101,14 @@ public class MainActivity extends AppCompatActivity {
         logo.setColor(Color.parseColor("#9A000000"));
 
         canvas.drawBitmap(scaledBitmap,20,10,paint);
+        canvas.drawBitmap(scaledBitmap,20+421,10,paint);
 
-        canvas.drawText("International Distribution",62,19,logo);
-        canvas.drawText("Company Bangladesh",61,24,logo);
-        canvas.drawText("PLC.",60,29,logo);
+        canvas.drawText("International Distribution",52,19,logo);
+        canvas.drawText("International Distribution",52+421,19,logo);
+        canvas.drawText("Company Bangladesh",51,24,logo);
+        canvas.drawText("Company Bangladesh",51+421,24,logo);
+        canvas.drawText("PLC.",50,29,logo);
+        canvas.drawText("PLC.",50+421,29,logo);
 
 
         invoice.setTextSize(10);
@@ -120,69 +128,105 @@ public class MainActivity extends AppCompatActivity {
         invoice.setTextAlign(Paint.Align.CENTER);
         invoice.setTextScaleX(1.1f);
         canvas.drawText("Delivery Challan", 210, y, invoice);
+        canvas.drawText("Delivery Challan", 210+421, y, invoice);
 
         y += 18;
         paint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText("Cash & Carry-Kellogg",210,y,paint);
+        canvas.drawText("Cash & Carry-Kellogg",210+421,y,paint);
         y+=12;
         canvas.drawText("16/1 Lake Circus, Kalabagan Kalabagan Dhaka",210,y,paint);
+        canvas.drawText("16/1 Lake Circus, Kalabagan Kalabagan Dhaka",210+421,y,paint);
         y+=12;
         canvas.drawText("Cell Number : 01964400647",210,y,paint);
+        canvas.drawText("Cell Number : 01964400647",210+421,y,paint);
 
         y += 30;
         titlePaint.setTextAlign(Paint.Align.LEFT);
         canvas.drawText("Outlet Name : ",10,y,titlePaint);
+        canvas.drawText("Outlet Name : ",10+421,y,titlePaint);
         canvas.drawText("Business Name : ",295,y,titlePaint);
+        canvas.drawText("Business Name : ",295+421,y,titlePaint);
         paint.setTextAlign(Paint.Align.LEFT);
         canvas.drawText("Popular Pharmacy",titlePaint.measureText("Outlet Name : ")+10,y,paint);
+        canvas.drawText("Popular Pharmacy",titlePaint.measureText("Outlet Name : ")+10+421,y,paint);
         canvas.drawText("Kellogg's",titlePaint.measureText("Business Name : ")+295,y,paint);
+        canvas.drawText("Kellogg's",titlePaint.measureText("Business Name : ")+295+421,y,paint);
 
         y+=12;
         canvas.drawText("Address : ",10,y,titlePaint);
+        canvas.drawText("Address : ",10+421,y,titlePaint);
         canvas.drawText("Order Number : ",295,y,titlePaint);
+        canvas.drawText("Order Number : ",295+421,y,titlePaint);
         canvas.drawText("Dhanmondi Road 2",titlePaint.measureText("Address : ")+10,y,paint);
+        canvas.drawText("Dhanmondi Road 2",titlePaint.measureText("Address : ")+10+421,y,paint);
         canvas.drawText("SO9293653",titlePaint.measureText("Order Number : ")+295,y,paint);
+        canvas.drawText("SO9293653",titlePaint.measureText("Order Number : ")+295+421,y,paint);
 
         y+=12;
         canvas.drawText("Outlet Code : ",10,y,titlePaint);
+        canvas.drawText("Outlet Code : ",10+421,y,titlePaint);
         canvas.drawText("Order Date : ",295,y,titlePaint);
+        canvas.drawText("Order Date : ",295+421,y,titlePaint);
         canvas.drawText("1202050210019",titlePaint.measureText("Outlet Code : ")+10,y,paint);
+        canvas.drawText("1202050210019",titlePaint.measureText("Outlet Code : ")+10+421,y,paint);
         canvas.drawText("2024-10-20",titlePaint.measureText("Order Date : ")+295,y,paint);
+        canvas.drawText("2024-10-20",titlePaint.measureText("Order Date : ")+295+421,y,paint);
 
         y+=12;
         canvas.drawText("Route Name : ",10,y,titlePaint);
+        canvas.drawText("Route Name : ",10+421,y,titlePaint);
         canvas.drawText("Delivery Date : ",295,y,titlePaint);
+        canvas.drawText("Delivery Date : ",295+421,y,titlePaint);
         canvas.drawText("Mirpur Road",titlePaint.measureText("Route Name : ")+10,y,paint);
+        canvas.drawText("Mirpur Road",titlePaint.measureText("Route Name : ")+10+421,y,paint);
         canvas.drawText(" ",titlePaint.measureText("Delivery Date : ")+295,y,paint);
+        canvas.drawText(" ",titlePaint.measureText("Delivery Date : ")+295+421,y,paint);
 
         y+=12;
         canvas.drawText("SO Name : ",10,y,titlePaint);
+        canvas.drawText("SO Name : ",10+421,y,titlePaint);
         canvas.drawText("Md. Hamidul Sarder",titlePaint.measureText("SO Name : ")+10,y,paint);
+        canvas.drawText("Md. Hamidul Sarder",titlePaint.measureText("SO Name : ")+10+421,y,paint);
 
         ///==============================================================================================================
 
         y+=40;
         canvas.drawLine(10, y-2, 411, y-2, grayPaint); // Draw gray underline from left to right
+        canvas.drawLine(10+421, y-2, 411+421, y-2, grayPaint); // Draw gray underline from left to right
 
         y +=8;
         // Table headers
         canvas.drawText("UNIT", 175, y, titlePaint);
+        canvas.drawText("UNIT", 175+421, y, titlePaint);
         canvas.drawText("ORDER", 210, y, titlePaint);
+        canvas.drawText("ORDER", 210+421, y, titlePaint);
         canvas.drawText("PROMO", 250, y, titlePaint);
+        canvas.drawText("PROMO", 250+421, y, titlePaint);
         canvas.drawText("PROMO", 290, y, titlePaint);
+        canvas.drawText("PROMO", 290+421, y, titlePaint);
         y += 10;
         canvas.drawText("S/N", 12, y, titlePaint);
+        canvas.drawText("S/N", 12+421, y, titlePaint);
         canvas.drawText("SKU CODE", 30, y, titlePaint);
+        canvas.drawText("SKU CODE", 30+421, y, titlePaint);
         canvas.drawText("SKU NAME", 80, y, titlePaint);
+        canvas.drawText("SKU NAME", 80+421, y, titlePaint);
         canvas.drawText("PRICE", 175, y, titlePaint);
+        canvas.drawText("PRICE", 175+421, y, titlePaint);
         canvas.drawText("QTY", 210, y, titlePaint);
+        canvas.drawText("QTY", 210+421, y, titlePaint);
         canvas.drawText("QTY", 250, y, titlePaint);
+        canvas.drawText("QTY", 250+421, y, titlePaint);
         canvas.drawText("AMOUNT", 290, y, titlePaint);
+        canvas.drawText("AMOUNT", 290+421, y, titlePaint);
         canvas.drawText("TOTAL AMOUNT", 340, y, titlePaint);
+        canvas.drawText("TOTAL AMOUNT", 340+421, y, titlePaint);
 
 
         y +=8;
         canvas.drawLine(10, y-3, 411, y-3, grayPaint); // Draw gray underline from left to right
+        canvas.drawLine(10+421, y-3, 411+421, y-3, grayPaint); // Draw gray underline from left to right
 
         ///===============================================================================================================
 
@@ -212,12 +256,19 @@ public class MainActivity extends AppCompatActivity {
 
             // Draw price, quantity, and total price aligned to their respective positions
             canvas.drawText(String.valueOf(sn), 12, y+2, paint);
+            canvas.drawText(String.valueOf(sn), 12+421, y+2, paint);
             canvas.drawText(skuCode, 30, y+2, paint);
+            canvas.drawText(skuCode, 30+421, y+2, paint);
             canvas.drawText(String.format("%.2f",productPrice), 175, y+2, paint);
+            canvas.drawText(String.format("%.2f",productPrice), 175+421, y+2, paint);
             canvas.drawText(String.valueOf(productQuantity), 210, y+2, paint);
+            canvas.drawText(String.valueOf(productQuantity), 210+421, y+2, paint);
             canvas.drawText("0", 250, y+2, paint);
+            canvas.drawText("0", 250+421, y+2, paint);
             canvas.drawText(String.valueOf(discountAmount), 290, y+2, paint);
+            canvas.drawText(String.valueOf(discountAmount), 290+421, y+2, paint);
             canvas.drawText(String.format("%.2f",totalPrice), 340, y+2, paint);
+            canvas.drawText(String.format("%.2f",totalPrice), 340+421, y+2, paint);
 
             // Measure product name and split if necessary
             float textWidth = paint.measureText(productName);
@@ -229,6 +280,7 @@ public class MainActivity extends AppCompatActivity {
                     if (paint.measureText(line + word) > productNameWidth) {
                         // Draw the current line if it exceeds the width
                         canvas.drawText(line.toString(), leftMargin, y+2, paint);
+                        canvas.drawText(line.toString(), leftMargin+421, y+2, paint);
                         y += lineHeight;
                         line = new StringBuilder(); // Reset for the next line
                     }
@@ -236,47 +288,65 @@ public class MainActivity extends AppCompatActivity {
                 }
                 // Draw remaining text in the last line
                 canvas.drawText(line.toString(), leftMargin, y+2, paint);
+                canvas.drawText(line.toString(), leftMargin+421, y+2, paint);
             } else {
                 // Draw product name in one line if it fits
                 canvas.drawText(productName, leftMargin, y+2, paint);
+                canvas.drawText(productName, leftMargin+421, y+2, paint);
             }
 
             // Draw gray underline below each product row
             y += lineHeight;
             canvas.drawLine(10, y, 411, y, grayPaint); // Draw gray underline from left to right
+            canvas.drawLine(10+421, y, 411+421, y, grayPaint); // Draw gray underline from left to right
             y += lineHeight; // Move to the next row
 
         } /// End For loops
 
         canvas.drawText("TOTAL", 80, y+2, paint);
+        canvas.drawText("TOTAL", 80+421, y+2, paint);
         canvas.drawText(String.valueOf(totalQuantity), 210, y+2, paint);
+        canvas.drawText(String.valueOf(totalQuantity), 210+421, y+2, paint);
         canvas.drawText("0", 250, y+2, paint);
+        canvas.drawText("0", 250+421, y+2, paint);
         canvas.drawText(String.valueOf(totalDiscountAmount), 290, y+2, paint);
+        canvas.drawText(String.valueOf(totalDiscountAmount), 290+421, y+2, paint);
         canvas.drawText(String.format("%.2f",totalAmount), 340, y+2, paint);
+        canvas.drawText(String.format("%.2f",totalAmount), 340+421, y+2, paint);
         y += lineHeight; // Move to the next row
 
         canvas.drawLine(10, y, 411, y, grayPaint); // Draw gray underline from left to right
+        canvas.drawLine(10+421, y, 411+421, y, grayPaint); // Draw gray underline from left to right
         y += lineHeight; // Move to the next row
 
         canvas.drawText("Total Amount", 250, y+2, paint);
+        canvas.drawText("Total Amount", 250+421, y+2, paint);
         canvas.drawText(String.format("%.2f",totalAmount), 340, y+2, paint);
+        canvas.drawText(String.format("%.2f",totalAmount), 340+421, y+2, paint);
         y += lineHeight; // Move to the next row
 
         canvas.drawLine(10, y, 411, y, grayPaint); // Draw gray underline from left to right
+        canvas.drawLine(10+421, y, 411+421, y, grayPaint); // Draw gray underline from left to right
         y += lineHeight; // Move to the next row
 
         canvas.drawText("Discount Amount", 250, y+2, paint);
+        canvas.drawText("Discount Amount", 250+421, y+2, paint);
         canvas.drawText(String.valueOf(totalDiscountAmount), 340, y+2, paint);
+        canvas.drawText(String.valueOf(totalDiscountAmount), 340+421, y+2, paint);
         y += lineHeight; // Move to the next row
 
         canvas.drawLine(10, y, 411, y, grayPaint); // Draw gray underline from left to right
+        canvas.drawLine(10+421, y, 411+421, y, grayPaint); // Draw gray underline from left to right
         y += lineHeight; // Move to the next row
 
         canvas.drawText("Net Amount", 250, y+2, paint);
+        canvas.drawText("Net Amount", 250+421, y+2, paint);
         canvas.drawText(String.format("%.2f",totalAmount-totalDiscountAmount), 340, y+2, paint);
+        canvas.drawText(String.format("%.2f",totalAmount-totalDiscountAmount), 340+421, y+2, paint);
         y += lineHeight; // Move to the next row
 
         canvas.drawLine(10, y, 411, y, grayPaint); // Draw gray underline from left to right
+        canvas.drawLine(10+421, y, 411+421, y, grayPaint); // Draw gray underline from left to right
         y += lineHeight; // Move to the next row
 
         ///==================================================================================================
@@ -284,26 +354,32 @@ public class MainActivity extends AppCompatActivity {
         y += 12;
         paint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText("In Word-("+NumberToWordsConverter.convertDoubleToWords(totalAmount-totalDiscountAmount)+" taka only)",210,y,paint);
+        canvas.drawText("In Word-("+NumberToWordsConverter.convertDoubleToWords(totalAmount-totalDiscountAmount)+" taka only)",210+421,y,paint);
 
         y+=60;
         blackPaint.setColor(Color.BLACK);
         blackPaint.setStrokeWidth(1);
         canvas.drawLine(30, y, 130, y, blackPaint);
+        canvas.drawLine(30+421, y, 130+421, y, blackPaint);
         canvas.drawLine(311, y, 411, y, blackPaint);
+        canvas.drawLine(311+421, y, 411+421, y, blackPaint);
 
         y+=8;
         canvas.drawText("Customer Signature",80,y,paint);
+        canvas.drawText("Customer Signature",80+421,y,paint);
         canvas.drawText("Signature of Distributor",361,y,paint);
+        canvas.drawText("Signature of Distributor",361+421,y,paint);
 
         y+=18;
         paint.setTextAlign(Paint.Align.LEFT);
         canvas.drawText("Printing Time : "+"2024-10-20 09:09 PM",28,y,paint);
+        canvas.drawText("Printing Time : "+"2024-10-20 09:09 PM",28+421,y,paint);
 
         /****************************************************************************************************/
 
         pdfDocument.finishPage(page);
         // Save PDF to storage
-        File file = new File(getExternalFilesDir(null), "invoice.pdf");
+        File file = new File(getExternalFilesDir(null), outletName+".pdf");
         try {
             pdfDocument.writeTo(new FileOutputStream(file));
             setToast("Invoice saved as PDF");
